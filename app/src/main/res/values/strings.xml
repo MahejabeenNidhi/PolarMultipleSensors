@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Polar ECG</string>
+    <string name="ecg_name">ECG</string>
+    <string name="hr_name">HR / RR</string>
+    <string name="hr_title">HR and RR vs. Time (for 5 min)</string>
+    <string name="hr_range_title">HR, /sec RR, ms/10</string>
+    <string name="disconnect">DISCONNECT</string>
+    <string name="connectEcg">CONNECT ECG</string>
+    <string name="connectHr">CONNECT HR/RR</string>
+    <string name="connecting">Connecting to devices</string>
+    <string name="connected">Connected!</string>
+    <string name="device_id_1">Device ID 1</string>
+    <string name="device_id_2">Device ID 2</string>
+    <string name="set_id_button">Change device IDs</string>
+</resources>
