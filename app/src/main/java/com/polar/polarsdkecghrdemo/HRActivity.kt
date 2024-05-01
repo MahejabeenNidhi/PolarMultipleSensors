@@ -28,7 +28,8 @@ class HRActivity : AppCompatActivity(), PlotterListener {
     private lateinit var deviceId2: String
 
     private lateinit var api: PolarBleApi
-    private lateinit var plotter: HrAndRrPlotter
+    private lateinit var plotter1: HrAndRrPlotter
+    private lateinit var plotter2: HrAndRrPlotter
 
     private lateinit var textViewHR1: TextView
     private lateinit var textViewHR2: TextView
@@ -39,7 +40,10 @@ class HRActivity : AppCompatActivity(), PlotterListener {
 
     private lateinit var textViewBattery: TextView
     private lateinit var textViewFwVersion: TextView
-    private lateinit var plot: XYPlot
+
+    private lateinit var plot1: XYPlot
+    private lateinit var plot2: XYPlot
+
     private var hrDisposable1: Disposable? = null
     private var hrDisposable2: Disposable? = null
 
@@ -57,7 +61,9 @@ class HRActivity : AppCompatActivity(), PlotterListener {
         textViewDeviceId2 = findViewById(R.id.hr_view_deviceId2)
         textViewBattery = findViewById(R.id.hr_view_battery_level)
         textViewFwVersion = findViewById(R.id.hr_view_fw_version)
-        plot = findViewById(R.id.hr_view_plot)
+
+        plot1 = findViewById(R.id.hr_view_plot1)
+        plot2 = findViewById(R.id.hr_view_plot2)
 
         textViewDeviceId1.text = "ID1: $deviceId1"
         textViewDeviceId2.text = "ID2: $deviceId2"
@@ -138,19 +144,27 @@ class HRActivity : AppCompatActivity(), PlotterListener {
             a.printStackTrace()
         }
 
-        plotter = HrAndRrPlotter()
-        plotter.setListener(this)
-        plot.addSeries(plotter.hrSeries, plotter.hrFormatter)
-        plot.addSeries(plotter.rrSeries, plotter.rrFormatter)
-        plot.setRangeBoundaries(50, 100, BoundaryMode.AUTO)
-        plot.setDomainBoundaries(0, 360000, BoundaryMode.AUTO)
-        // Left labels will increment by 10
-        plot.setRangeStep(StepMode.INCREMENT_BY_VAL, 10.0)
-        plot.setDomainStep(StepMode.INCREMENT_BY_VAL, 60000.0)
-        // Make left labels be an integer (no decimal places)
-        plot.graph.getLineLabelStyle(XYGraphWidget.Edge.LEFT).format = DecimalFormat("#")
-        // These don't seem to have an effect
-        plot.linesPerRangeLabel = 2
+        plotter1 = HrAndRrPlotter(deviceId1)
+        plotter1.setListener(this)
+        plot1.addSeries(plotter1.hrSeries, plotter1.hrFormatter)
+        plot1.addSeries(plotter1.rrSeries, plotter1.rrFormatter)
+        plot1.setRangeBoundaries(50, 100, BoundaryMode.AUTO)
+        plot1.setDomainBoundaries(0, 360000, BoundaryMode.AUTO)
+        plot1.setRangeStep(StepMode.INCREMENT_BY_VAL, 10.0)
+        plot1.setDomainStep(StepMode.INCREMENT_BY_VAL, 60000.0)
+        plot1.graph.getLineLabelStyle(XYGraphWidget.Edge.LEFT).format = DecimalFormat("#")
+        plot1.linesPerRangeLabel = 2
+
+        plotter2 = HrAndRrPlotter(deviceId2)
+        plotter2.setListener(this)
+        plot2.addSeries(plotter2.hrSeries, plotter2.hrFormatter)
+        plot2.addSeries(plotter2.rrSeries, plotter2.rrFormatter)
+        plot2.setRangeBoundaries(50, 100, BoundaryMode.AUTO)
+        plot2.setDomainBoundaries(0, 360000, BoundaryMode.AUTO)
+        plot2.setRangeStep(StepMode.INCREMENT_BY_VAL, 10.0)
+        plot2.setDomainStep(StepMode.INCREMENT_BY_VAL, 60000.0)
+        plot2.graph.getLineLabelStyle(XYGraphWidget.Edge.LEFT).format = DecimalFormat("#")
+        plot2.linesPerRangeLabel = 2
     }
 
     public override fun onDestroy() {
@@ -159,7 +173,10 @@ class HRActivity : AppCompatActivity(), PlotterListener {
     }
 
     override fun update() {
-        runOnUiThread { plot.redraw() }
+        runOnUiThread {
+            plot1.redraw()
+            plot2.redraw()
+        }
     }
 
     fun streamHR() {
@@ -178,6 +195,7 @@ class HRActivity : AppCompatActivity(), PlotterListener {
                                 textViewRR1.text = rrText
                             }
                             textViewHR1.text = sample.hr.toString()
+                            plotter1.addValues(sample, deviceId1)
                         }
                     },
                     { error: Throwable ->
@@ -203,6 +221,7 @@ class HRActivity : AppCompatActivity(), PlotterListener {
                                 textViewRR2.text = rrText
                             }
                             textViewHR2.text = sample.hr.toString()
+                            plotter2.addValues(sample, deviceId2)
                         }
                     },
                     { error: Throwable ->

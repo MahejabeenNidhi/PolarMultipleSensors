@@ -4,6 +4,8 @@
     <string name="hr_name">HR / RR</string>
     <string name="hr_title">HR and RR vs. Time (for 5 min)</string>
     <string name="hr_range_title">HR, /sec RR, ms/10</string>
+    <string name="hr_plot_title_device1">HR and RR vs. Time (Device 1)</string>
+    <string name="hr_plot_title_device2">HR and RR vs. Time (Device 2)</string>
     <string name="disconnect">DISCONNECT</string>
     <string name="connectEcg">CONNECT ECG</string>
     <string name="connectHr">CONNECT HR/RR</string>
